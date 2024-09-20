@@ -2,6 +2,10 @@
 
 This is a simple starter pack for creating a Tic Tac Toe game using Nuxt 3 and TypeScript.
 
+## Play the Game
+
+You can play the game online: [Tic Tac Toe](https://tam-tic-tac-toe.netlify.app/)
+
 ## Setup
 
 Make sure to install the dependencies:
