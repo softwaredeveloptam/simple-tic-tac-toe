@@ -2,23 +2,37 @@
   <div class="tic-tac-toe">
     <h1>Tic Tac Toe</h1>
     <div class="board">
-      <div v-for="(row, rowIndex) in board" :key="rowIndex" class="row">
-        <button 
-          v-for="(cell, cellIndex) in row" 
+      <div
+        v-for="(row, rowIndex) in board"
+        :key="rowIndex"
+        class="row"
+      >
+        <button
+          v-for="(cell, cellIndex) in row"
           :key="cellIndex"
-          @click="makeMove(rowIndex, cellIndex)"
           :disabled="cell !== null || gameOver"
           class="cell"
+          @click="makeMove(rowIndex, cellIndex)"
         >
           {{ cell }}
         </button>
       </div>
     </div>
-    <p v-if="gameOver">{{ winner ? `${winner} wins!` : 'It\'s a draw!' }}</p>
+    <p v-if="gameOver">
+      {{ winner ? `${winner} wins!` : 'It\'s a draw!' }}
+    </p>
     <div class="controls">
-      <button @click="resetGame" class="reset">Reset Game</button>
+      <button
+        class="reset"
+        @click="resetGame"
+      >
+        Reset Game
+      </button>
       <label>
-        <input type="checkbox" v-model="isAIOpponent"> Play against AI
+        <input
+          v-model="isAIOpponent"
+          type="checkbox"
+        > Play against AI
       </label>
     </div>
   </div>
@@ -34,7 +48,7 @@ type Player = 'X' | 'O'
 const board = ref<Board>([
   [null, null, null],
   [null, null, null],
-  [null, null, null]
+  [null, null, null],
 ])
 
 const currentPlayer = ref<Player>('X')
@@ -43,8 +57,8 @@ const gameOver = ref<boolean>(false)
 const winner = ref<Player | null>(null)
 
 const makeAIMove = (): void => {
-  const emptyCells = board.value.flatMap((row, rowIndex) => 
-    row.map((cell, colIndex) => ({ row: rowIndex, col: colIndex, value: cell }))
+  const emptyCells = board.value.flatMap((row, rowIndex) =>
+    row.map((cell, colIndex) => ({ row: rowIndex, col: colIndex, value: cell })),
   ).filter(cell => cell.value === null)
 
   if (emptyCells.length > 0) {
@@ -68,22 +82,22 @@ const makeMove = (row: number, col: number): void => {
 
 const checkWinner = (): void => {
   const winPatterns: number[][][] = [
-    [[0,0],[0,1],[0,2]],
-    [[1,0],[1,1],[1,2]],
-    [[2,0],[2,1],[2,2]],
-    [[0,0],[1,0],[2,0]],
-    [[0,1],[1,1],[2,1]],
-    [[0,2],[1,2],[2,2]],
-    [[0,0],[1,1],[2,2]],
-    [[0,2],[1,1],[2,0]]
+    [[0, 0], [0, 1], [0, 2]],
+    [[1, 0], [1, 1], [1, 2]],
+    [[2, 0], [2, 1], [2, 2]],
+    [[0, 0], [1, 0], [2, 0]],
+    [[0, 1], [1, 1], [2, 1]],
+    [[0, 2], [1, 2], [2, 2]],
+    [[0, 0], [1, 1], [2, 2]],
+    [[0, 2], [1, 1], [2, 0]],
   ]
 
-  for (let pattern of winPatterns) {
+  for (const pattern of winPatterns) {
     const [a, b, c] = pattern
     if (
-      board.value[a[0]][a[1]] &&
-      board.value[a[0]][a[1]] === board.value[b[0]][b[1]] &&
-      board.value[a[0]][a[1]] === board.value[c[0]][c[1]]
+      board.value[a[0]][a[1]]
+      && board.value[a[0]][a[1]] === board.value[b[0]][b[1]]
+      && board.value[a[0]][a[1]] === board.value[c[0]][c[1]]
     ) {
       winner.value = board.value[a[0]][a[1]] as Player
       gameOver.value = true
@@ -100,13 +114,12 @@ const resetGame = (): void => {
   board.value = [
     [null, null, null],
     [null, null, null],
-    [null, null, null]
+    [null, null, null],
   ]
   currentPlayer.value = 'X'
   gameOver.value = false
   winner.value = null
 }
-
 </script>
 
 <style lang="scss">
