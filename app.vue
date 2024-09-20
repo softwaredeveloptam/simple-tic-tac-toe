@@ -15,7 +15,12 @@
       </div>
     </div>
     <p v-if="gameOver">{{ winner ? `${winner} wins!` : 'It\'s a draw!' }}</p>
-    <button @click="resetGame" class="reset">Reset Game</button>
+    <div class="controls">
+      <button @click="resetGame" class="reset">Reset Game</button>
+      <label>
+        <input type="checkbox" v-model="isAIOpponent"> Play against AI
+      </label>
+    </div>
   </div>
 </template>
 
@@ -33,14 +38,31 @@ const board = ref<Board>([
 ])
 
 const currentPlayer = ref<Player>('X')
+const isAIOpponent = ref<boolean>(false)
 const gameOver = ref<boolean>(false)
 const winner = ref<Player | null>(null)
+
+const makeAIMove = (): void => {
+  const emptyCells = board.value.flatMap((row, rowIndex) => 
+    row.map((cell, colIndex) => ({ row: rowIndex, col: colIndex, value: cell }))
+  ).filter(cell => cell.value === null)
+
+  if (emptyCells.length > 0) {
+    const randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)]
+    setTimeout(() => makeMove(randomCell.row, randomCell.col), 500)
+  }
+}
 
 const makeMove = (row: number, col: number): void => {
   if (board.value[row][col] === null && !gameOver.value) {
     board.value[row][col] = currentPlayer.value
     checkWinner()
-    currentPlayer.value = currentPlayer.value === 'X' ? 'O' : 'X'
+    if (!gameOver.value) {
+      currentPlayer.value = currentPlayer.value === 'X' ? 'O' : 'X'
+      if (isAIOpponent.value && currentPlayer.value === 'O') {
+        makeAIMove()
+      }
+    }
   }
 }
 
@@ -84,6 +106,7 @@ const resetGame = (): void => {
   gameOver.value = false
   winner.value = null
 }
+
 </script>
 
 <style lang="scss">
@@ -121,6 +144,17 @@ const resetGame = (): void => {
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
+  }
+
+  .controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+
+    label {
+      margin-top: 10px;
+    }
   }
 }
 </style>
