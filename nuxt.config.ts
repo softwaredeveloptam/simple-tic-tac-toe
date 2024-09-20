@@ -8,4 +8,13 @@ export default defineNuxtConfig({
       stylistic: true,
     },
   },
+  vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          api: 'modern',
+        },
+      },
+    },
+  },
 })
